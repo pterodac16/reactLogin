@@ -14,36 +14,21 @@ import {
     Row
 } from "reactstrap"
 import './LoginForm.css';
+import {login} from "./api/wrapper";
 
 const LoginForm = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        fetch("http://localhost:3333/login", {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({
-                username: username,
-                password: password,
-            }),
-        }).then((response) => {
-            if (response.ok) {
-                alert("Success!");
-            } else {
-                alert("Failed!");
-            }
-        });
+        await login(username, password);
     };
 
     return (
         <div className="vertical-center">
             <Container>
                 <Row>
-                    {/*<Col md="3" xs="0"></Col>*/}
                     <Col md={{offset: 3, size: 6}}>
                         <Card>
                             <CardBody>
@@ -89,7 +74,6 @@ const LoginForm = () => {
                             </CardBody>
                         </Card>
                     </Col>
-                    {/*<Col md="3" xs="0"></Col>*/}
                 </Row>
             </Container>
         </div>
