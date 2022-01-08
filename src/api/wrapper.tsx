@@ -8,7 +8,6 @@ let ax: Axios;
 
 export async function login(username: string, password: string) {
     const url = baseUrl + 'login';
-    console.log(url);
     try {
         const response: any = await axios.post(url, {
             username: username,
@@ -22,12 +21,35 @@ export async function login(username: string, password: string) {
                 Authorization: response.data.token
             },
         })
+        return response;
     } catch (e) {
         alert("Failed!")
     }
 }
 
+export function getCookie(cname: string) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i=0;i<ca.length;i++) {
+        let c = ca[i];
+        while(c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
 export function getAxios() {
-    if(ax === undefined) throw new Error("Axios client is not initialized!");
+    ax = new Axios({
+        baseURL: baseUrl,
+        headers: {
+            Authorization: getCookie('token')
+        }
+    })
+    if (ax === undefined) throw new Error("Axios client is not initialized!");
     return ax;
 }

@@ -15,14 +15,22 @@ import {
 } from "reactstrap"
 import './LoginForm.css';
 import {login} from "./api/wrapper";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    let navigate = useNavigate();
+
     const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        await login(username, password);
+        const response = await login(username, password);
+        console.log(response);
+        if(response && response.status === 200) {
+            navigate('/dashboard');
+            document.cookie = "token=" + response.data.token;
+        }
     };
 
     return (
