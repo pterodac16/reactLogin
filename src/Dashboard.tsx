@@ -1,21 +1,33 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {getAxios} from "./api/wrapper";
+import DashboardVisual from "./DashboardVisual";
+
+type User = {
+    username: string;
+    firstName: string;
+    lastName: string;
+}
+
+export const UserContext = React.createContext<User | undefined>(undefined);
 
 const Dashboard = () => {
-    const data = useState(undefined);
-    const client = getAxios();
-    if(client) {
-        client.get("/user").then((res) => {
-            console.log("got data");
-            console.log(res);
-        }).catch((e) => console.log(e));
+    const [data, setData] = useState<User | undefined>(undefined);
+    useEffect(() => {
+        const retreiveUser = async () => {
+            const client = getAxios();
+            client?.get("/user").then((res) => {
+                setData(JSON.parse(res.data));
+            })
+        }
+        retreiveUser().catch(console.error);
+    }, [])
 
-    }
+
 
     return (
-        <div>
-            <p>dashboard</p>
-        </div>
+        <UserContext.Provider value={data}>
+            <DashboardVisual/>
+        </UserContext.Provider>
     )
 }
 

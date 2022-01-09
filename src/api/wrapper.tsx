@@ -44,12 +44,13 @@ export function getCookie(cname: string) {
 }
 
 export function getAxios() {
+    const cookie = getCookie('token');
+    if (cookie === "") return null;
     ax = new Axios({
         baseURL: baseUrl,
         headers: {
-            Authorization: getCookie('token')
+            Authorization: cookie
         }
     })
-    if (ax === undefined) throw new Error("Axios client is not initialized!");
     return ax;
 }
