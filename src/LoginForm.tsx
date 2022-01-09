@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import {
     Button,
     Card,
@@ -15,23 +15,31 @@ import {
 } from "reactstrap"
 import './LoginForm.css';
 import {login} from "./api/wrapper";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {useFormik} from "formik";
+import * as Yup from 'yup';
 
 const LoginForm = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-
     let navigate = useNavigate();
-
-    const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const response = await login(username, password);
-        console.log(response);
-        if(response && response.status === 200) {
-            navigate('/dashboard');
-            document.cookie = "token=" + response.data.token;
-        }
-    };
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            password: ''
+        },
+        validationSchema: Yup.object({
+            username: Yup.string()
+                .max(15, 'Must be 15 characters or less')
+                .required('Required'),
+            password: Yup.string()
+                .required('Required')
+        }),
+        onSubmit: async (values) => {
+            const response = await login(values.username, values.password);
+            if (response && response.status === 200) {
+                document.cookie = "token=" + response.data.token + ";SameSite=Lax";
+                navigate('/dashboard');
+            }
+        }});
 
     return (
         <div className="vertical-center">
@@ -48,19 +56,20 @@ const LoginForm = () => {
                                               id="login-subtitle">
                                     Enter your credentials
                                 </CardSubtitle>
-                                <Form onSubmit={submit}>
+                                <Form onSubmit={formik.handleSubmit}>
                                     <FormGroup>
                                         <Label for="username">
                                             Username
                                         </Label>
                                         <Input
                                             id="username"
-                                            name="username"
                                             placeholder="Username"
                                             type="text"
-                                            value={username}
-                                            onChange={(e) => setUsername(e.target.value)}
+                                            {...formik.getFieldProps('username')}
                                         />
+                                        {formik.touched.username && formik.errors.username ? (
+                                            <div>{formik.errors.username}</div>
+                                        ) : null}
                                     </FormGroup>
                                     <FormGroup>
                                         <Label for="password">
@@ -68,12 +77,13 @@ const LoginForm = () => {
                                         </Label>
                                         <Input
                                             id="password"
-                                            name="password"
                                             placeholder="Password"
                                             type="password"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
+                                            {...formik.getFieldProps('password')}
                                         />
+                                        {formik.touched.password && formik.errors.password ? (
+                                            <div>{formik.errors.password}</div>
+                                        ) : null}
                                     </FormGroup>
                                     <div>
                                         <Button color="primary" outline type="submit">Sign in</Button>
@@ -86,6 +96,7 @@ const LoginForm = () => {
             </Container>
         </div>
     );
-};
+}
 
-export default LoginForm;
+
+    export default LoginForm;

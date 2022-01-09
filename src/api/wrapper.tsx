@@ -14,7 +14,6 @@ export async function login(username: string, password: string) {
             password: password
         });
         alert("Success!");
-        console.log(response);
         ax = new Axios({
             baseURL: baseUrl,
             headers: {
