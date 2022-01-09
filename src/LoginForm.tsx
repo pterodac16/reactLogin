@@ -68,7 +68,7 @@ const LoginForm = () => {
                                             {...formik.getFieldProps('username')}
                                         />
                                         {formik.touched.username && formik.errors.username ? (
-                                            <div>{formik.errors.username}</div>
+                                            <div style={{color: "red", fontSize: "12px", marginTop: "0.25rem"}}>{formik.errors.username}</div>
                                         ) : null}
                                     </FormGroup>
                                     <FormGroup>
@@ -82,7 +82,7 @@ const LoginForm = () => {
                                             {...formik.getFieldProps('password')}
                                         />
                                         {formik.touched.password && formik.errors.password ? (
-                                            <div>{formik.errors.password}</div>
+                                            <div style={{color: "red", fontSize: "12px", marginTop: "0.25rem"}}>{formik.errors.password}</div>
                                         ) : null}
                                     </FormGroup>
                                     <div>
