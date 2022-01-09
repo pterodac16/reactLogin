@@ -6,24 +6,27 @@ if (!baseUrl.endsWith("/")) baseUrl = baseUrl + "/";
 
 let ax: Axios;
 
-export async function login(username: string, password: string) {
-    const url = baseUrl + 'login';
-    try {
-        const response: any = await axios.post(url, {
-            username: username,
-            password: password
-        });
-        alert("Success!");
-        ax = new Axios({
-            baseURL: baseUrl,
-            headers: {
-                Authorization: response.data.token
-            },
-        })
-        return response;
-    } catch (e) {
-        alert("Failed!")
+export function useLogin() {
+    async function login(username: string, password: string) {
+        const url = baseUrl + 'login';
+        try {
+            const response: any = await axios.post(url, {
+                username: username,
+                password: password
+            });
+            alert("Success!");
+            ax = new Axios({
+                baseURL: baseUrl,
+                headers: {
+                    Authorization: response.data.token
+                },
+            })
+            return response;
+        } catch (e) {
+            alert("Failed!")
+        }
     }
+    return login;
 }
 
 export function getCookie(cname: string) {

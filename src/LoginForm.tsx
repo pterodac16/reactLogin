@@ -14,13 +14,14 @@ import {
     Row
 } from "reactstrap"
 import './LoginForm.css';
-import {login} from "./api/wrapper";
+import {useLogin} from "./api/wrapper";
 import {useNavigate} from "react-router-dom";
 import {useFormik} from "formik";
 import * as Yup from 'yup';
 
 const LoginForm = () => {
     let navigate = useNavigate();
+    let login = useLogin();
     const formik = useFormik({
         initialValues: {
             username: '',
